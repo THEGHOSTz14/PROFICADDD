@@ -1,0 +1,2 @@
+# Vendored compiler + bundler downloaded by build.sh, not part of the app
+.tools/

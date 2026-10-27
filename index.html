@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OpenDraft — 2D CAD</title>
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+<div id="app">
+  <header id="topbar">
+    <div class="brand">OpenDraft<span>2D CAD</span></div>
+
+    <div class="group" role="group" aria-label="File">
+      <button id="btnNew" class="btn" title="New drawing (Ctrl+Alt+N)">New</button>
+      <button id="btnOpen" class="btn" title="Open .oddr JSON">Open</button>
+      <button id="btnSave" class="btn" title="Save .oddr JSON (Ctrl+S)">Save</button>
+      <button id="btnPng" class="btn" title="Export PNG image">PNG</button>
+      <button id="btnSvg" class="btn" title="Export SVG image">SVG</button>
+      <button id="btnPdf" class="btn" title="Export PDF document">PDF</button>
+    </div>
+
+    <div class="group" role="group" aria-label="Edit">
+      <button id="btnUndo" class="btn" title="Undo (Ctrl+Z)">Undo</button>
+      <button id="btnRedo" class="btn" title="Redo (Ctrl+Y)">Redo</button>
+      <button id="btnDelete" class="btn" title="Delete selection (Del)">Delete</button>
+    </div>
+
+    <div class="group" role="group" aria-label="View">
+      <button id="btnZoomIn" class="btn" title="Zoom in">+</button>
+      <button id="btnZoomOut" class="btn" title="Zoom out">&minus;</button>
+      <button id="btnFit" class="btn" title="Zoom to extents (Ctrl+F)">Fit</button>
+    </div>
+
+    <div class="group grow" role="group" aria-label="Drafting settings">
+      <label class="field">Layer
+        <select id="layerSelect" aria-label="Current layer"></select>
+        <button id="btnLayerAdd" class="btn" title="Add layer">+</button>
+        <button id="btnLayerDel" class="btn" title="Delete the current layer">&minus;</button>
+        <button id="btnLayerManager" class="btn" title="Layer settings">Layers&hellip;</button>
+      </label>
+      <label class="field">Units
+        <select id="unitSelect" aria-label="Drawing units">
+          <option value="mm">mm</option>
+          <option value="cm">cm</option>
+          <option value="m">m</option>
+          <option value="in">in</option>
+        </select>
+      </label>
+      <label class="field">Page
+        <select id="pageSizeSelect" aria-label="Paper size">
+          <option value="">None</option>
+          <option value="A4" selected>A4</option>
+          <option value="A3">A3</option>
+          <option value="A2">A2</option>
+          <option value="A1">A1</option>
+          <option value="A0">A0</option>
+          <option value="Letter">Letter</option>
+          <option value="Legal">Legal</option>
+          <option value="Tabloid">Tabloid</option>
+        </select>
+      </label>
+      <label class="toggle"><input type="checkbox" id="chkPageBoundary" checked> Boundary</label>
+      <label class="toggle"><input type="checkbox" id="chkGrid" checked> Grid</label>
+      <label class="toggle"><input type="checkbox" id="chkSnap" checked> Snap</label>
+      <label class="toggle"><input type="checkbox" id="chkOsnap" checked> OSnap</label>
+      <label class="toggle"><input type="checkbox" id="chkOrtho"> Ortho</label>
+      <label class="field narrow">Grid&times;
+        <input type="number" id="gridStep" min="1" step="1" value="1" title="Grid box size in document units">
+      </label>
+    </div>
+  </header>
+
+  <div id="main">
+    <nav id="palette" aria-label="Drawing tools">
+      <div class="palette-title">Tools</div>
+      <div id="toolButtons"></div>
+      <div class="palette-title">Modify</div>
+      <div id="modifyButtons"></div>
+    </nav>
+
+    <div id="canvasWrap">
+      <div id="pageTabs"></div>
+      <canvas id="view"></canvas>
+      <div id="hud">
+        <div id="prompt"></div>
+        <div id="gridInfo"></div>
+        <div id="coords"></div>
+      </div>
+    </div>
+  </div>
+
+  <footer id="statusbar">
+    <span id="statTool">Ready</span>
+    <span id="statSel">0 selected</span>
+    <span id="statLen">L: —</span>
+    <span id="statAngle">A: —</span>
+    <span id="statMsg"></span>
+  </footer>
+</div>
+
+<input type="file" id="fileInput" accept=".oddr,.json,application/json" hidden>
+
+<div id="layerModal" class="modal" hidden>
+  <div class="modal-card" role="dialog" aria-modal="true" aria-label="Layer settings">
+    <header>
+      <h2>Layers</h2>
+      <button id="btnLayerClose" class="btn" title="Close">&times;</button>
+    </header>
+    <table class="layer-table">
+      <thead>
+        <tr>
+          <th title="Draw new geometry on this layer">Current</th>
+          <th title="Show and print">Show</th>
+          <th title="Prevent editing">Lock</th>
+          <th>Name</th>
+          <th>Color</th>
+          <th>Linetype</th>
+          <th>Weight</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody id="layerRows"></tbody>
+    </table>
+    <footer>
+      <button id="btnLayerNew" class="btn">Add layer</button>
+      <span id="layerHint">Hidden layers stay out of snaps, picks and exports.</span>
+    </footer>
+  </div>
+</div>
+
+<script src="dist/bundle.js"></script>
+</body>
+</html>
